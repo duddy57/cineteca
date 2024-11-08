@@ -24,7 +24,7 @@
 </script>
 
 <main class="flex h-full w-full gap-4">
-	<div class="flex h-[80%] flex-col gap-4">
+	<div class="flex h-auto flex-col gap-4">
 		<SidebarMain {data} />
 	</div>
 	<section class="flex w-[80%] flex-col gap-4">

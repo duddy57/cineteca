@@ -1,9 +1,6 @@
 <script lang="ts">
-	import * as Card from '$lib/components/ui/card/index.js';
-
 	import { Label } from '../ui/label';
 	import { ScrollArea } from '../ui/scroll-area';
-	import { Separator } from '../ui/separator';
 	import SidebarNews from './sidebar-news.svelte';
 	import SidebarSelect from './sidebar-select.svelte';
 
@@ -12,7 +9,7 @@
 	const { news } = data;
 </script>
 
-<aside class="flex h-full flex-col gap-4 rounded-lg border">
+<aside class="flex h-[80%] flex-col gap-4 rounded-lg border">
 	<div class="flex flex-col gap-4 p-4">
 		<SidebarSelect />
 	</div>

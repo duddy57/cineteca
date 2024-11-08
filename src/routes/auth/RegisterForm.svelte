@@ -2,14 +2,12 @@
 	import * as Card from '$lib/components/ui/card';
 	import * as Popover from '$lib/components/ui/popover';
 	import * as Form from '$lib/components/ui/form';
-	import { Separator } from '$lib/components/ui/separator';
 	import { Input } from '$lib/components/ui/input';
-	import { Button, buttonVariants } from '$lib/components/ui/button';
+	import { buttonVariants } from '$lib/components/ui/button';
 	import { toast } from 'svelte-sonner';
 	import { registerSchema, type RegisterSchema } from '$lib/schema';
 	import { zodClient } from 'sveltekit-superforms/adapters';
 	import { superForm, type Infer, type SuperValidated } from 'sveltekit-superforms';
-	import { browser } from '$app/environment';
 	import CalendarYear from '$lib/components/calendarYear.svelte';
 	import { CalendarIcon } from 'lucide-svelte';
 	import {
@@ -21,9 +19,8 @@
 		today
 	} from '@internationalized/date';
 	import { cn } from '$lib/utils';
-	import SuperDebug from 'sveltekit-superforms/client/SuperDebug.svelte';
 
-	const formRegister: Infer<RegisterSchema> = $props();
+	const formRegister = $props();
 
 	const form = superForm(formRegister, {
 		validators: zodClient(registerSchema),
@@ -68,16 +65,7 @@
 				</Form.Control>
 				<Form.FieldErrors />
 			</Form.Field>
-			<Form.Field {form} name="email">
-				<Form.Control>
-					{#snippet children({ props })}
-						<Form.Label>Email</Form.Label>
-						<Input {...props} bind:value={$formData.email} />
-					{/snippet}
-				</Form.Control>
-				<Form.FieldErrors />
-			</Form.Field>
-			<Form.Field {form} name="date_of_birth" class="flex flex-col">
+			<Form.Field {form} name="date_of_birth" class="flex w-full flex-col">
 				<Form.Control>
 					{#snippet children({ props })}
 						<Form.Label>Data de nascimento</Form.Label>
@@ -111,27 +99,33 @@
 								/>
 							</Popover.Content>
 						</Popover.Root>
-						<Form.Description
-							>A data de nascimento e utilizada para filtra o conteúdo</Form.Description
-						>
+						<Form.Description>
+							A data de nascimento e utilizada para filtra o conteúdo
+						</Form.Description>
 						<Form.FieldErrors />
 						<input hidden value={$formData.date_of_birth} name={props.name} />
 					{/snippet}
 				</Form.Control>
 			</Form.Field>
+			<Form.Field {form} name="email">
+				<Form.Control>
+					{#snippet children({ props })}
+						<Form.Label>Email</Form.Label>
+						<Input {...props} bind:value={$formData.email} />
+					{/snippet}
+				</Form.Control>
+				<Form.FieldErrors />
+			</Form.Field>
 			<Form.Field {form} name="password">
 				<Form.Control>
 					{#snippet children({ props })}
 						<Form.Label>Senha</Form.Label>
-						<Input {...props} bind:value={$formData.password} />
+						<Input {...props} bind:value={$formData.password} type="password" />
 					{/snippet}
 				</Form.Control>
 				<Form.FieldErrors />
 			</Form.Field>
 			<Form.Button class="mt-4 w-full items-center">Entrar</Form.Button>
 		</form>
-		{#if browser}
-			<SuperDebug data={$formData} />
-		{/if}
 	</Card.Content>
 </Card.Root>

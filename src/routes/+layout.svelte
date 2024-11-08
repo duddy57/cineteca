@@ -9,7 +9,7 @@
 
 <Toaster />
 <ModeWatcher />
-<NavMain />
-<main class="container mx-auto my-28 h-screen px-4">
+<main class="mx-auto my-28 h-screen px-4">
+	<NavMain />
 	{@render children()}
 </main>

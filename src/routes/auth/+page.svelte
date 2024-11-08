@@ -35,9 +35,9 @@
 			<Card.Content>
 				<div>
 					{#if login}
-						<LoginForm {formLogin} />
+						<LoginForm form={formLogin} />
 					{:else}
-						<RegisterForm {formRegister} />
+						<RegisterForm form={formRegister} />
 					{/if}
 				</div>
 			</Card.Content>

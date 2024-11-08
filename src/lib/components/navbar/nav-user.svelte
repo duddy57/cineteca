@@ -2,19 +2,25 @@
 	import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
 	import { AvatarBeam } from 'svelte-boring-avatars';
 	import { Button } from '../ui/button';
-	import { ShoppingCart } from 'lucide-svelte';
+	import { ShoppingCart, LogOut } from 'lucide-svelte';
 	import ModeToggle from '../mode-toggle.svelte';
 	import { goto } from '$app/navigation';
 	import { userStore } from '$lib/stores/userStore';
+	import { enhance } from '$app/forms';
 
-	const user = userStore.subscribe((value) => {
-		return value;
+	let user: any;
+	const unsubscribe = userStore.subscribe((value) => {
+		user = value;
 	});
+
+	$: hasUser = user && user.username ? true : false;
+
+	console.log(hasUser);
 </script>
 
 <div class="flex items-center gap-4">
 	<div class="flex items-center gap-4">
-		{#if user}
+		{#if hasUser}
 			<Button variant="outline" size="lg">
 				<ShoppingCart />
 			</Button>
@@ -29,6 +35,14 @@
 						<DropdownMenu.Item>Minhas seções</DropdownMenu.Item>
 						<DropdownMenu.Item>Club</DropdownMenu.Item>
 						<DropdownMenu.Item>Conta</DropdownMenu.Item>
+						<DropdownMenu.Item>
+							<form method="post" class="w-full" action="?/logout" use:enhance>
+								<Button variant="outline" size="sm" class="flex w-full items-center gap-2">
+									<LogOut />
+									Sair
+								</Button>
+							</form>
+						</DropdownMenu.Item>
 					</DropdownMenu.Group>
 				</DropdownMenu.Content>
 			</DropdownMenu.Root>

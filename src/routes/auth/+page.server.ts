@@ -101,7 +101,8 @@ export const actions: Actions = {
 			const session = await auth.createSession(sessionToken, userId);
 			auth.setSessionTokenCookie(event, sessionToken, session.expiresAt);
 			return {
-				form
+				form,
+				redirect: true
 			}
 		} catch (e) {
 			console.error(e);
