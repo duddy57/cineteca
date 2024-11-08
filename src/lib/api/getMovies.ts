@@ -1,6 +1,7 @@
-import { PUBLIC_TMDB_API_KEY } from '$env/static/public';
+import { SECRET_TMDB_API_KEY } from "$env/static/private";
 
-const apiKey = PUBLIC_TMDB_API_KEY;
+
+const apiKey = SECRET_TMDB_API_KEY;
 const url = 'https://api.themoviedb.org/3';
 
 export async function getMovies() {

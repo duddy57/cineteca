@@ -8,7 +8,7 @@
 	import { userStore } from '$lib/stores/userStore';
 
 	const user = userStore.subscribe((value) => {
-		console.log('valor da store: ', value);
+		return value;
 	});
 </script>
 
