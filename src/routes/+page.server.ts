@@ -4,25 +4,21 @@ import { getMovies } from "$lib/api/getMovies";
 import type { Actions, PageServerLoad } from "./$types";
 import { fail, redirect } from '@sveltejs/kit';
 
+
 export const load: PageServerLoad = async (event) => {
   try {
-    const user = event.locals.user;
-    console.log('User:', user);
+    const [news, movies] = await Promise.all([
+      getNews(),
+      getMovies(),
 
-    if (!user) {
-      console.log('Usuário não autenticado');
-      return { user: null, movies: [], news: [] };
-    }
+    ]);
 
-    console.log('Buscando notícias...');
-    const news = await getNews();
-    console.log('Notícias recebidas:', news);
 
-    console.log('Buscando filmes...');
-    const movies = await getMovies();
-    console.log('Filmes recebidos:', movies);
-
-    return { user, movies, news };
+    return {
+      user: event.locals.user || null,
+      movies,
+      news
+    };
   } catch (error) {
     console.error('Erro no load:', error);
     return { user: null, movies: [], news: [] };

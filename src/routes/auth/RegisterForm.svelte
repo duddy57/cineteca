@@ -3,13 +3,13 @@
 	import * as Popover from '$lib/components/ui/popover';
 	import * as Form from '$lib/components/ui/form';
 	import { Input } from '$lib/components/ui/input';
-	import { buttonVariants } from '$lib/components/ui/button';
+	import { Button, buttonVariants } from '$lib/components/ui/button';
 	import { toast } from 'svelte-sonner';
 	import { registerSchema, type RegisterSchema } from '$lib/schema';
 	import { zodClient } from 'sveltekit-superforms/adapters';
 	import { superForm, type Infer, type SuperValidated } from 'sveltekit-superforms';
 	import CalendarYear from '$lib/components/calendarYear.svelte';
-	import { CalendarIcon } from 'lucide-svelte';
+	import { CalendarIcon, EyeIcon, EyeOff } from 'lucide-svelte';
 	import {
 		CalendarDate,
 		DateFormatter,
@@ -47,11 +47,12 @@
 	});
 
 	let placeholder = $state<DateValue>(today(getLocalTimeZone()));
+	let passwordVisible = $state(false);
 </script>
 
 <Card.Root class="border-none">
-	<Card.Header class="flex flex-row items-center justify-between">
-		<Card.Title>Registrar-se</Card.Title>
+	<Card.Header class="flex flex-col items-center justify-center gap-4">
+		<Card.Title class="text-2xl font-bold">Registrar-se</Card.Title>
 		<Card.Description>Preencha os campos para criar uma conta</Card.Description>
 	</Card.Header>
 	<Card.Content>
@@ -74,15 +75,16 @@
 								{...props}
 								class={cn(
 									buttonVariants({ variant: 'outline' }),
-									'w-[280px] justify-start pl-4 text-left font-normal',
+									'w-[270px] justify-start pl-4 text-left font-normal md:w-full',
 									!value && 'text-muted-foreground'
 								)}
 							>
 								{value ? df.format(value.toDate(getLocalTimeZone())) : 'Selecione uma data'}
 								<CalendarIcon class="ml-auto size-4 opacity-50" />
 							</Popover.Trigger>
-							<Popover.Content class="w-auto p-0" side="top">
+							<Popover.Content class="w-auto p-0" side="right">
 								<CalendarYear
+									locale="pt-BR"
 									type="single"
 									value={value as DateValue}
 									bind:placeholder
@@ -99,9 +101,6 @@
 								/>
 							</Popover.Content>
 						</Popover.Root>
-						<Form.Description>
-							A data de nascimento e utilizada para filtra o conteúdo
-						</Form.Description>
 						<Form.FieldErrors />
 						<input hidden value={$formData.date_of_birth} name={props.name} />
 					{/snippet}
@@ -120,7 +119,25 @@
 				<Form.Control>
 					{#snippet children({ props })}
 						<Form.Label>Senha</Form.Label>
-						<Input {...props} bind:value={$formData.password} type="password" />
+						<div class="relative flex">
+							<Input
+								{...props}
+								bind:value={$formData.password}
+								class="w-full"
+								type={passwordVisible ? 'text' : 'password'}
+							/>
+							<Button
+								class="absolute right-0 top-0 h-full"
+								type="button"
+								onclick={() => (passwordVisible = !passwordVisible)}
+							>
+								{#if passwordVisible}
+									<EyeOff class="h-4 w-4" />
+								{:else}
+									<EyeIcon class="h-4 w-4" />
+								{/if}
+							</Button>
+						</div>
 					{/snippet}
 				</Form.Control>
 				<Form.FieldErrors />

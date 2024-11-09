@@ -6,6 +6,7 @@
 	import { newsStore } from '$lib/stores/newsStore.js';
 	import { userStore } from '$lib/stores/userStore.js';
 	import type { PageData } from './$types';
+	import { Skeleton } from '$lib/components/ui/skeleton';
 	export let data: PageData;
 
 	const { movies, user, news } = data;
@@ -23,19 +24,25 @@
 	}
 </script>
 
-<main class="flex h-full w-full gap-4">
-	<div class="flex h-auto flex-col gap-4">
-		<SidebarMain {data} />
+{#await data}
+	<Skeleton class="h-full w-full rounded-full" />
+{:then data}
+	<div class="md: flex h-full w-full flex-col gap-4 md:flex-row">
+		<div class="hidden h-auto flex-col items-center md:flex">
+			<SidebarMain {data} />
+		</div>
+		<section class="flex w-full flex-col gap-4" id="latest">
+			<Card.Root class="h-full md:h-[80%] md:w-[85%] md:shadow-lg md:shadow-purple-900">
+				<Card.Header>
+					<Card.Title>Filmes em cartaz</Card.Title>
+					<Card.Description>Os filmes em cartaz durante esse mês</Card.Description>
+				</Card.Header>
+				<Card.Content>
+					<CardMain {data} />
+				</Card.Content>
+			</Card.Root>
+		</section>
 	</div>
-	<section class="flex w-[80%] flex-col gap-4">
-		<Card.Root>
-			<Card.Header>
-				<Card.Title>Filmes em cartaz</Card.Title>
-				<Card.Description>Os filmes em cartaz durante esse mês</Card.Description>
-			</Card.Header>
-			<Card.Content>
-				<CardMain {data} />
-			</Card.Content>
-		</Card.Root>
-	</section>
-</main>
+{:catch error}
+	<span>Error: {error.message}</span>
+{/await}

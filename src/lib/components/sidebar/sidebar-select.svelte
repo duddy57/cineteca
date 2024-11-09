@@ -3,7 +3,7 @@
 	import { Button } from '$lib/components/ui/button';
 </script>
 
-<div class="flex w-full items-center justify-center gap-4">
+<div class="flex w-full items-center justify-center gap-4 md:h-full">
 	<Select.Root type="single">
 		<Select.Trigger class="w-full">Selecione uma cidade</Select.Trigger>
 		<Select.Content>

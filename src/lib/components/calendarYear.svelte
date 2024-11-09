@@ -18,21 +18,21 @@
 	}: WithoutChildrenOrChild<CalendarRootProps> = $props();
 
 	const monthOptions = [
-		'January',
-		'February',
-		'March',
-		'April',
-		'May',
-		'June',
-		'July',
-		'August',
-		'September',
-		'October',
-		'November',
-		'December'
+		'Janeiro',
+		'Fevereiro',
+		'Março',
+		'Abril',
+		'Maio',
+		'Junho',
+		'Julho',
+		'Agosto',
+		'Setembro',
+		'Outubro',
+		'Novembro',
+		'Dezembro'
 	].map((month, i) => ({ value: String(i + 1), label: month }));
 
-	const monthFmt = new DateFormatter('en-US', {
+	const monthFmt = new DateFormatter('pt-BR', {
 		month: 'long'
 	});
 
@@ -78,7 +78,7 @@
 						placeholder = placeholder.set({ month: Number.parseInt(v) });
 					}}
 				>
-					<Select.Trigger aria-label="Select month" class="w-[60%]">
+					<Select.Trigger aria-label="Selecione o mês" class="w-[60%]">
 						{monthLabel}
 					</Select.Trigger>
 					<Select.Content class="max-h-[200px] overflow-y-auto">
@@ -96,8 +96,8 @@
 						placeholder = placeholder.set({ year: Number.parseInt(v) });
 					}}
 				>
-					<Select.Trigger aria-label="Select year" class="w-[40%]">
-						{defaultYear?.label ?? 'Select year'}
+					<Select.Trigger aria-label="Selecione o ano" class="w-[40%]">
+						{defaultYear?.label ?? 'Selecione o ano'}
 					</Select.Trigger>
 					<Select.Content class="max-h-[200px] overflow-y-auto">
 						{#each yearOptions as { value, label }}

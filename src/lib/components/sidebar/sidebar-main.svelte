@@ -10,11 +10,13 @@
 </script>
 
 <aside class="flex h-[80%] flex-col gap-4 rounded-lg border">
-	<div class="flex flex-col gap-4 p-4">
-		<SidebarSelect />
+	<div class="hidden md:flex md:flex-col lg:flex">
+		<div class="flex flex-col gap-4 p-4">
+			<SidebarSelect />
+		</div>
+		<ScrollArea class="h-full rounded-md border p-4 text-center md:h-[49%] md:w-full">
+			<Label>Ultimas noticias</Label>
+			<SidebarNews {news} />
+		</ScrollArea>
 	</div>
-	<ScrollArea class="h-full rounded-md border p-4 text-center">
-		<Label>Ultimas noticias</Label>
-		<SidebarNews {news} />
-	</ScrollArea>
 </aside>
