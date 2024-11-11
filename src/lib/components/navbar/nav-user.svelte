@@ -83,7 +83,12 @@
 				<Button variant="outline" href="/">inicio</Button>
 				<Button variant="outline" href="/latest">Recentes</Button>
 				<Button variant="outline" href="/favorite">Favoritos</Button>
-				<Button variant="outline">Bomboniere</Button>
+				<Button
+					variant="outline"
+					onclick={() => {
+						goto('/shop');
+					}}>Bomboniere</Button
+				>
 				{#if hasUser}
 					<Button variant="outline" size="lg" class="justify-start">
 						<ShoppingCart class="mr-2 h-5 w-5" />

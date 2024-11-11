@@ -47,7 +47,7 @@
 				<Button
 					variant="ghost"
 					onclick={() => {
-						goto('/');
+						goto('/shop');
 					}}
 				>
 					<Candy />

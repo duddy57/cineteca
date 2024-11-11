@@ -3,21 +3,23 @@ import { getNews } from "$lib/api/getNews";
 import { getMovies } from "$lib/api/getMovies";
 import type { Actions, PageServerLoad } from "./$types";
 import { fail, redirect } from '@sveltejs/kit';
+import { getLatestMovies } from '$lib/api/getLatest';
 
 
 export const load: PageServerLoad = async (event) => {
   try {
-    const [news, movies] = await Promise.all([
+    const [news, movies, latestMovies] = await Promise.all([
       getNews(),
       getMovies(),
-
+      getLatestMovies()
     ]);
 
 
     return {
       user: event.locals.user || null,
       movies,
-      news
+      news,
+      latestMovies
     };
   } catch (error) {
     console.error('Erro no load:', error);

@@ -9,7 +9,7 @@
 	const { news } = data;
 </script>
 
-<aside class="flex h-[80%] flex-col gap-4 rounded-lg border">
+<aside class="flex h-[80%] flex-col gap-4 rounded-lg">
 	<div class="hidden md:flex md:flex-col lg:flex">
 		<div class="flex flex-col gap-4 p-4">
 			<SidebarSelect />

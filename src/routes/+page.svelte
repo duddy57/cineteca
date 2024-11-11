@@ -7,6 +7,7 @@
 	import { userStore } from '$lib/stores/userStore.js';
 	import type { PageData } from './$types';
 	import { Skeleton } from '$lib/components/ui/skeleton';
+	import CardFavMain from '$lib/components/movies/favorite/card-fav-main.svelte';
 	export let data: PageData;
 
 	const { movies, user, news } = data;
