@@ -1,7 +1,7 @@
 <script lang="ts">
 	import * as Card from '$lib/components/ui/card';
 	import * as Dialog from '$lib/components/ui/dialog';
-	import { Sparkle, Sparkles } from 'lucide-svelte';
+	import { Sparkles } from 'lucide-svelte';
 
 	export let data;
 

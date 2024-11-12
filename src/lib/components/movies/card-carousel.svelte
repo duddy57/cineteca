@@ -2,15 +2,23 @@
 	import * as Carousel from '$lib/components/ui/carousel';
 	import { Star } from 'lucide-svelte';
 	import { Button } from '$lib/components/ui/button';
+	import Autoplay from 'embla-carousel-autoplay';
 
 	export let movies;
 </script>
 
-<div class="w-full px-4 sm:px-6 lg:px-8">
-	<Carousel.Root class="w-full">
-		<Carousel.Content class="-ml-4">
+<div class="h-auto w-full px-4 sm:px-6 lg:px-8">
+	<Carousel.Root
+		class="h-auto w-full"
+		plugins={[
+			Autoplay({
+				delay: 4000
+			})
+		]}
+	>
+		<Carousel.Content>
 			{#each movies as movie (movie.id)}
-				<Carousel.Item class="mb-4 p-4 md:basis-1/4 lg:basis-1/3">
+				<Carousel.Item class="mb-4 p-4 md:basis-2/5 lg:basis-2/6">
 					<div class="h-full">
 						<div
 							class="flex h-full flex-col overflow-hidden rounded-lg shadow-lg transition-all duration-300 hover:shadow-xl"
@@ -27,6 +35,15 @@
 									<h2 class="line-clamp-2 text-lg font-semibold text-white shadow-lg">
 										{movie.title}
 									</h2>
+									<p class="line-clamp-3 text-sm text-gray-300">
+										{movie.overview}
+										<span class="text-sm text-gray-400">
+											{movie.vote_average.toFixed(1)}
+										</span>
+										<span class="text-sm text-gray-400">
+											{movie.vote_count}
+										</span>
+									</p>
 								</div>
 							</div>
 							<div class="flex flex-1 flex-col justify-between p-4">

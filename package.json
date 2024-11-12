@@ -22,7 +22,7 @@
 		"@sveltejs/vite-plugin-svelte": "^4.0.0",
 		"@types/eslint": "^9.6.0",
 		"autoprefixer": "^10.4.20",
-		"bits-ui": "^1.0.0-next.46",
+		"bits-ui": "^1.0.0-next.51",
 		"clsx": "^2.1.1",
 		"drizzle-kit": "^0.22.0",
 		"embla-carousel-svelte": "^8.3.1",
@@ -55,6 +55,7 @@
 		"@oslojs/encoding": "^1.1.0",
 		"arctic": "^2.2.1",
 		"drizzle-orm": "^0.33.0",
+		"embla-carousel-autoplay": "^8.3.1",
 		"mode-watcher": "^0.4.1",
 		"svelte-boring-avatars": "^1.2.6"
 	}

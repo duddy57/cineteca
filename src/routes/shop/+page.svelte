@@ -34,7 +34,27 @@
 	let selectedCombo = writable(data[0]);
 	let expandedItem = writable(null);
 
-	function selectCombo(combo) {
+	function selectCombo(
+		combo:
+			| {
+					name: string;
+					oldPrice: string;
+					newPrice: string;
+					image: string;
+					description: string;
+					value: string;
+					price?: undefined;
+			  }
+			| {
+					name: string;
+					price: string;
+					image: string;
+					description: string;
+					value: string;
+					oldPrice?: undefined;
+					newPrice?: undefined;
+			  }
+	) {
 		selectedCombo.set(combo);
 		expandedItem.set(null);
 	}

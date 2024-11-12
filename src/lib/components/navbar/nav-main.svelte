@@ -39,8 +39,18 @@
 									goto('favorite');
 								}}>Favoritos</DropdownMenu.Item
 							>
-							<DropdownMenu.Item>Pre-vendas</DropdownMenu.Item>
-							<DropdownMenu.Item>Lançamentos</DropdownMenu.Item>
+							<DropdownMenu.Item
+								onclick={() => {
+									goto('/upcoming');
+								}}>Pre-vendas</DropdownMenu.Item
+							>
+							<DropdownMenu.Item
+								onclick={() => {
+									goto('/latest');
+								}}
+							>
+								Lançamentos
+							</DropdownMenu.Item>
 						</DropdownMenu.Group>
 					</DropdownMenu.Content>
 				</DropdownMenu.Root>

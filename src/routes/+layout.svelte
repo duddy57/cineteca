@@ -8,7 +8,12 @@
 
 <Toaster />
 <ModeWatcher />
-<main class="mx-auto mt-28 h-screen px-4">
-	<NavMain />
-	{@render children()}
+
+<main class="h-screen w-full">
+	<div class="flex h-full w-full flex-col">
+		<NavMain />
+		<div class="mt-28 flex h-full w-full flex-col">
+			{@render children()}
+		</div>
+	</div>
 </main>

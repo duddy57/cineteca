@@ -1,32 +1,48 @@
 import * as auth from '$lib/server/auth';
-import { getNews } from "$lib/api/getNews";
-import { getMovies } from "$lib/api/getMovies";
+import { getMovies } from "$lib/api/movies";
 import type { Actions, PageServerLoad } from "./$types";
-import { fail, redirect } from '@sveltejs/kit';
-import { getLatestMovies } from '$lib/api/getLatest';
+import { error, fail, redirect } from '@sveltejs/kit';
+import { movieApiKey, movieUrl } from '$lib/api/utils';
 
 
 export const load: PageServerLoad = async (event) => {
   try {
-    const [news, movies, latestMovies] = await Promise.all([
-      getNews(),
+    const [movies] = await Promise.all([
       getMovies(),
-      getLatestMovies()
     ]);
 
+    const query = event.url.searchParams.get('query');
 
-    return {
-      user: event.locals.user || null,
-      movies,
-      news,
-      latestMovies
-    };
+    if (!query) {
+      return { movies: [] };
+    }
+
+    try {
+      const response = await fetch(
+        `${movieUrl}/search/movie?api_key=${movieApiKey}&query=${encodeURIComponent(query)}&language=pt-BR`
+      );
+
+      if (!response.ok) {
+        throw error(response.status, 'Failed to fetch movies');
+      }
+
+      const data = await response.json();
+      console.log(data.results);
+      return {
+        user: event.locals.user || null,
+        movies,
+        movieSe: data.results
+      };
+    } catch (err) {
+      console.error('Error fetching movies:', err);
+      throw error(500, 'An error occurred while fetching movies');
+    }
   } catch (error) {
     console.error('Erro no load:', error);
-    return { user: null, movies: [], news: [] };
+    return { user: null, movies: [], searchMovie: [] };
   }
-};
 
+}
 
 export const actions: Actions = {
   logout: async (event) => {
