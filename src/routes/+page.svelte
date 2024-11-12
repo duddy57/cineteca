@@ -116,7 +116,7 @@
 			</div>
 		</section>
 		<section
-			class="hidden w-full overflow-hidden rounded-b-lg bg-primary-foreground/60 py-12 md:container"
+			class="hidden w-full overflow-hidden rounded-b-lg bg-primary-foreground/60 py-12 md:container md:flex"
 		>
 			<div
 				class=" animate-scroll hover:pause hidden whitespace-nowrap hover:cursor-pointer md:flex"
