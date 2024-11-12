@@ -18,18 +18,12 @@ export async function getLatest() {
 
 // Busca filmes usando o nome como parâmetro
 export async function searchMovies(query: string) {
-  try {
-    const res = await fetch(`${movieUrl}/search/movie?query=${encodeURIComponent(query)}&api_key=${movieApiKey}&language=pt-BR`);
-    if (!res.ok) {
-      throw new Error(`Erro na requisição: ${res.status}`);
-    }
-    const data = await res.json();
-    console.log('Dados da resposta:', data.results);
-    return data.results;
-  } catch (error) {
-    console.error('Erro na função searchMovies:', error);
-    throw error;
-  }
+  if (!query) return []
+
+  const res = await fetch(`${movieUrl}/search/movie?query=${encodeURIComponent(query)}&api_key=${movieApiKey}&language=pt-BR`);
+  const data = await res.json();
+  console.log('Dados da resposta:', data.results);
+  return data.results;
 }
 
 // Da GET nos filmes populares

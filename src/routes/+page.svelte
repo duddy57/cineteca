@@ -4,17 +4,15 @@
 	import { moviesStore } from '$lib/stores/moviesStore.js';
 	import { userStore } from '$lib/stores/userStore.js';
 	import type { PageData } from './$types';
-
 	import { Button } from '$lib/components/ui/button';
-
 	import { Input } from '$lib/components/ui/input';
 	import { Search, Sparkles } from 'lucide-svelte';
 	import { page } from '$app/stores';
 	import { goto } from '$app/navigation';
 	import { onMount } from 'svelte';
-	import { DateFormatter, toLocalTimeZone } from '@internationalized/date';
 	import Separator from '$lib/components/ui/separator/separator.svelte';
-	import { text } from '@sveltejs/kit';
+	import debounce from 'debounce';
+	import { toast } from 'svelte-sonner';
 
 	export let data: PageData;
 
@@ -23,8 +21,8 @@
 		'Marvel',
 		'Harry Potter',
 		'007',
-		'The Lord of the Rings',
-		'Fast & Furious',
+		'Senhor dos anéis',
+		'Velozes e furiosos',
 		'Jurassic Park',
 		'DC Comics',
 		'Piratas do caribe',
@@ -32,13 +30,13 @@
 		'Missão: Impossível',
 		'The Hunger Games',
 		'Toy Story',
-		'Home aranha',
+		'Homem aranha',
 		'X-Men',
 		'Shrek',
 		'Batman',
 		'Indiana Jones',
 		'Exterminador',
-		'The Matrix'
+		'Matrix'
 	];
 
 	const { movies, user, movieSe } = data;
@@ -51,24 +49,38 @@
 		moviesStore.set(data.movies);
 	}
 
-	let searchQuery = $page.url.searchParams.get('query') || '';
-	let selectedMovie: any = null;
-	let isDialogOpen = false;
+	let searchQuery = '';
+	let res: any[] = [];
+	let loading = false;
 
-	async function searchMovies() {
-		if (searchQuery.trim() === '') return;
-		await goto(`?query=${encodeURIComponent(searchQuery)}`, { keepFocus: true });
+	const debouncedSearch = debounce(async (term: string) => {
+		if (term.length < 2) {
+			res = [];
+			return;
+		}
+
+		loading = true;
+		try {
+			const response = await fetch(`/api/search?query=${encodeURIComponent(term)}`);
+			res = await response.json();
+		} catch (err) {
+			toast.error('Erro ao buscar filmes', {
+				description: 'Ocorreu um erro ao buscar os filmes. Por favor, tente novamente mais tarde.',
+				duration: 5000
+			});
+			console.error('Erro na busca', err);
+			res = [];
+		}
+		loading = false;
+	}, 300);
+
+	$: {
+		if (searchQuery) {
+			debouncedSearch(searchQuery);
+		} else {
+			res = [];
+		}
 	}
-
-	function closeDialog() {
-		isDialogOpen = false;
-	}
-
-	onMount(() => {
-		document.addEventListener('keydown', (e) => {
-			if (e.key === 'Escape') closeDialog();
-		});
-	});
 
 	function formatNote(vote) {
 		if (vote >= 8) return 'text-green-500'; // Alta avaliação
@@ -80,33 +92,27 @@
 <div class="flex w-full flex-col md:p-8">
 	<main class=" container flex-1 gap-4">
 		<section
-			class=" animated-bg flex h-96 w-full flex-col items-center justify-center rounded-t-lg"
+			class=" animated-bg flex h-96 flex-col items-center justify-center rounded-t-lg md:w-full"
 		>
-			<div class="mb-8 flex flex-col items-center justify-center gap-4">
+			<div class="mb-8 flex w-auto flex-col items-center justify-center gap-4 md:w-full">
 				<div class="relative w-full md:max-w-6xl">
 					<Input
 						type="text"
 						placeholder="Buscar filme..."
-						class="rounded-lg py-4 pl-12 pr-4 text-lg md:w-full md:rounded-l-lg"
+						class="h-14 rounded-lg py-4 pl-12 pr-4 text-lg md:w-full md:rounded-l-lg"
 						bind:value={searchQuery}
 					/>
 					<Search
 						class="absolute left-4 top-1/2 h-6 w-6 -translate-y-1/2 cursor-pointer text-gray-400 hover:scale-105"
 					/>
 				</div>
-				<Button
-					class="w-full rounded-lg bg-purple-900 px-6 py-3 text-lg text-white hover:bg-purple-800 md:rounded-r-lg "
-					onclick={searchMovies}
-				>
-					Buscar
-				</Button>
 			</div>
 			<div class="p-2 text-center">
 				<p class="mt-4 text-base font-medium text-white">
 					Ainda não sabe qual filme você quer? Explore nossa seleção!
 				</p>
 				<Button
-					class="rounded-lg bg-purple-900 px-6 py-3 text-lg text-white hover:bg-purple-800"
+					class="mt-4 rounded-lg bg-purple-900 px-6 py-3 text-lg text-white hover:bg-purple-800"
 					onclick={() => {
 						goto('/latest');
 					}}
@@ -134,77 +140,32 @@
 
 {#if searchQuery}
 	<section class="container mx-auto w-full rounded-lg border px-4 py-8 shadow-lg">
-		{#if movies.length > 0}
-			<div class="grid grid-cols-2 gap-4 md:grid-cols-6">
-				{#each movieSe as m (m.id)}
-					<Dialog.Root>
-						<Dialog.Trigger>
-							<div
-								class="shadow-xl hover:scale-105 hover:cursor-pointer hover:shadow-2xl hover:shadow-purple-900 hover:transition-all hover:duration-300"
-							>
-								<div>
-									<img
-										src={`https://image.tmdb.org/t/p/w500${m.poster_path}`}
-										alt={`Poster para o filme: ${m.title}`}
-									/>
-								</div>
-								<div class="bg-primary-foreground/50 p-6">
-									<h1 class="text-lg font-bold">{m.title}</h1>
-								</div>
-							</div>
-						</Dialog.Trigger>
-						<Dialog.Content>
-							<Dialog.Header>
-								<Dialog.Title>{m.title}</Dialog.Title>
-								<Dialog.Description>
-									<div class="flex w-full items-center justify-between gap-4 py-4">
-										<div class="w-fulls flex flex-col gap-4">
-											<img
-												src={`https://image.tmdb.org/t/p/w500${m.poster_path}`}
-												alt={`Poster para o filme: ${m.title}`}
-												class="w-42 h-48"
-											/>
-										</div>
-										<div class="flex w-full flex-col gap-4">
-											<div class="w-60">
-												<span class="text-sm text-muted-foreground">
-													{m.overview || 'Descrição não disponível.'}
-												</span>
-											</div>
-											<Separator />
-											<div class="flex items-center justify-between gap-4">
-												<div>
-													<p>
-														<span class="text-sm text-muted-foreground">
-															Ano de lançamento:
-															{m.release_date || 'Data não disponível.'}
-														</span>
-													</p>
-												</div>
-												<div class="flex flex-row items-center justify-between gap-4">
-													<span class="text-muted-foregroun flex items-center gap-2">
-														Nota:
-														<p class={`text-lg font-semibold ${formatNote(m.vote_average)}`}>
-															{m.vote_average}
-														</p>
-														<Sparkles class="h-4 w-4 text-yellow-500" />
-													</span>
-												</div>
-											</div>
-										</div>
-									</div>
-								</Dialog.Description>
-							</Dialog.Header>
-						</Dialog.Content>
-					</Dialog.Root>
+		{#if loading}
+			<div class="text-center font-bold">Carregando...</div>
+		{:else if res.length > 0}
+			<div class="space-y-4">
+				{#each res as movie}
+					<div class="flex items-center gap-4 rounded-lg border p-4">
+						<img
+							src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+							class="h-46 w-40"
+							loading="lazy"
+							alt={movie.title}
+						/>
+						<div class="flex flex-col">
+							<h2 class="text-lg font-bold">{movie.title}</h2>
+							<p class="text-sm text-gray-600">
+								Ano de lançamento: {new Date(movie.release_date).getFullYear()}
+								- Nota: {movie.vote_average}
+								<Sparkles class="inline-block h-4 w-4 text-yellow-500" />
+							</p>
+							<p class="mt-2">{movie.overview || 'Sem descrição disponível'}</p>
+						</div>
+					</div>
 				{/each}
 			</div>
-		{:else}
-			<div class="flex flex-col items-center">
-				<h1 class="text-4xl font-bold text-white">
-					Nenhum filme encontrado para "{searchQuery}"
-				</h1>
-			</div>
+		{:else if searchQuery.length > 1}
+			<div class="text-center">Nenhum resultado encontrado</div>
 		{/if}
 	</section>
 {/if}
@@ -221,7 +182,7 @@
 	}
 
 	.animate-scroll {
-		animation: scroll 30s linear infinite;
+		animation: scroll 40s linear infinite;
 	}
 
 	.hover\:pause:hover {
