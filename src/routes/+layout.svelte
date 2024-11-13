@@ -6,6 +6,10 @@
 	let { children } = $props();
 </script>
 
+<svelte:head>
+	<link rel="icon" type="image/svg" href="/favicon.svg" />
+	<title>Cineteca</title>
+</svelte:head>
 <Toaster />
 <ModeWatcher />
 

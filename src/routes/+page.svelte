@@ -76,8 +76,6 @@
 		if (vote >= 5) return 'text-yellow-500'; // Avaliação média
 		return 'text-red-500'; // Avaliação baixa
 	}
-
-	console.log(user);
 </script>
 
 <div class="flex w-full flex-col md:p-8">
