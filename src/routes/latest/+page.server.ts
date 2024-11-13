@@ -1,15 +1,15 @@
-import { getLatest } from "$lib/api/movies";
+import { getMovies } from "$lib/api/movies";
 import type { PageServerLoad } from "./$types";
 
 export const load: PageServerLoad = async () => {
   try {
 
-    const latest = await getLatest();
+    const movies = await getMovies();
+
 
     return {
-      latest,
+      movies,
     };
-
   } catch (error) {
     console.error('Erro no load:', error);
     return {

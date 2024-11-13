@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 export const loginSchema = z.object({
-  username: z.string().min(3, "Ops, username invalido").max(20, "Ops, username invalido"),
+  emailOrUsername: z.string().min(3, "Ops, username invalido").max(20, "Ops, username invalido").optional(),
   password: z.string().min(6, "Ops, senha invalida").max(20, "Ops, senha invalida"),
 })
 

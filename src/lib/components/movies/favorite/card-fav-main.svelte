@@ -3,9 +3,7 @@
 	import * as Dialog from '$lib/components/ui/dialog';
 	import { Sparkles } from 'lucide-svelte';
 
-	export let data;
-
-	const { latestMovie } = data;
+	export let popular;
 </script>
 
 <Card.Root>
@@ -15,7 +13,7 @@
 	</Card.Header>
 
 	<Card.Content class="border- grid grid-cols-2 gap-4 md:grid-cols-4 lg:grid-cols-6">
-		{#each latestMovie as movie (movie.id)}
+		{#each popular as movie (movie.id)}
 			<div class="flex flex-col gap-2 rounded-xl border p-2">
 				<img
 					src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}

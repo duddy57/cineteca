@@ -10,8 +10,10 @@
 	const { upcomingMovie } = data;
 </script>
 
-<div class="p-4">
-	<Card.Root>
+<div class="h-full w-full">
+	<Card.Root
+		class="mx-4 mb-4 flex flex-col items-center justify-center gap-4 rounded-lg border p-4 shadow-xl shadow-purple-900"
+	>
 		<Card.Header>
 			<Card.Title>Em breve</Card.Title>
 			<Card.Description>
@@ -27,17 +29,19 @@
 				]}
 			>
 				<Carousel.Content>
-					{#each data.upcomingMovie as item (item.id)}
+					{#each upcomingMovie as item (item.id)}
 						<Carousel.Item class="gap-4 p-1 md:basis-1/3">
 							<div class="relative aspect-[4/5] w-full overflow-hidden rounded-lg">
 								<img
 									src={`https://image.tmdb.org/t/p/w500${item.poster_path}`}
-									alt={`Poster for ${item.title}`}
+									alt={`Poster para o filme: ${item.title}`}
 									loading="lazy"
 									class="object-cover transition-transform duration-300 hover:scale-105"
 								/>
-								<div class="absolute bottom-0 left-0 right-0 bg-black bg-opacity-60 p-2 text-white">
-									<h3 class="truncate text-sm font-semibold">{item.title}</h3>
+								<div
+									class="absolute bottom-0 left-0 right-0 bg-black bg-opacity-60 p-2 px-6 text-white backdrop-blur-md"
+								>
+									<h3 class="truncate font-semibold shadow-xl">{item.title}</h3>
 								</div>
 							</div>
 						</Carousel.Item>

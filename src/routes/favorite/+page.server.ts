@@ -1,16 +1,16 @@
-import { getPopular } from "$lib/api/movies";
+import { getTopRated } from "$lib/api/movies";
 import type { PageServerLoad } from "../$types";
 
 export const load: PageServerLoad = async () => {
   try {
 
-    const latestMovie = await getPopular();
+    const popular = await getTopRated();
 
     return {
-      latestMovie
+      popular
     }
   } catch (error) {
     console.error('Erro no load:', error);
-    return { user: null, movies: [], news: [] };
+    return { popular: [] };
   }
 };

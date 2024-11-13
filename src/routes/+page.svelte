@@ -1,16 +1,10 @@
 <script lang="ts">
-	import * as Dialog from '$lib/components/ui/dialog';
-
-	import { moviesStore } from '$lib/stores/moviesStore.js';
 	import { userStore } from '$lib/stores/userStore.js';
 	import type { PageData } from './$types';
 	import { Button } from '$lib/components/ui/button';
 	import { Input } from '$lib/components/ui/input';
 	import { Search, Sparkles } from 'lucide-svelte';
-	import { page } from '$app/stores';
 	import { goto } from '$app/navigation';
-	import { onMount } from 'svelte';
-	import Separator from '$lib/components/ui/separator/separator.svelte';
 	import debounce from 'debounce';
 	import { toast } from 'svelte-sonner';
 
@@ -39,14 +33,9 @@
 		'Matrix'
 	];
 
-	const { movies, user, movieSe } = data;
-
-	if (user?.username) {
+	$: user = data.user;
+	$: if (user?.username) {
 		userStore.set({ username: user.username });
-	}
-
-	if (movies) {
-		moviesStore.set(data.movies);
 	}
 
 	let searchQuery = '';
@@ -82,11 +71,13 @@
 		}
 	}
 
-	function formatNote(vote) {
+	function formatNote(vote: number) {
 		if (vote >= 8) return 'text-green-500'; // Alta avaliação
 		if (vote >= 5) return 'text-yellow-500'; // Avaliação média
 		return 'text-red-500'; // Avaliação baixa
 	}
+
+	console.log(user);
 </script>
 
 <div class="flex w-full flex-col md:p-8">
@@ -154,11 +145,14 @@
 						/>
 						<div class="flex flex-col">
 							<h2 class="text-lg font-bold">{movie.title}</h2>
-							<p class="text-sm text-gray-600">
+							<span class="flex items-center text-sm text-gray-600">
 								Ano de lançamento: {new Date(movie.release_date).getFullYear()}
-								- Nota: {movie.vote_average}
+								- Nota: {' '}
+								<p class={`mx-2 font-semibold ${formatNote(movie.vote_average)}`}>
+									{movie.vote_average}
+								</p>
 								<Sparkles class="inline-block h-4 w-4 text-yellow-500" />
-							</p>
+							</span>
 							<p class="mt-2">{movie.overview || 'Sem descrição disponível'}</p>
 						</div>
 					</div>

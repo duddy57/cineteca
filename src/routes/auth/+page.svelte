@@ -1,48 +1,43 @@
 <script lang="ts">
-	import * as Card from '$lib/components/ui/card/index.js';
+	import * as Tabs from '$lib/components/ui/tabs';
 
-	import { type Infer, type SuperValidated } from 'sveltekit-superforms';
-	import { type LoginSchema, type RegisterSchema } from '$lib/schema';
-	import { Button } from '$lib/components/ui/button';
-	import RegisterForm from './RegisterForm.svelte';
 	import imgLogin from '$lib/assets/imgLogin.svg';
+	import type { PageData } from './$types';
+	import RegisterForm from './RegisterForm.svelte';
 	import LoginForm from './LoginForm.svelte';
 
-	export let formLogin: SuperValidated<Infer<LoginSchema>>;
-	export let formRegister: SuperValidated<Infer<RegisterSchema>>;
+	export let data: PageData;
 
-	let login: boolean = true;
+	let { loginForm, registerForm } = data;
 </script>
 
-<main class="flex w-full flex-col items-center justify-center gap-4 md:flex-row">
+<main class="flex h-auto w-full flex-col items-center justify-center gap-4 p-4 md:flex-row">
 	<div class="hidden w-full flex-col items-center justify-center md:flex md:h-full">
 		<img src={imgLogin} alt="Login" />
 		<a class="text-xs text-muted-foreground/20" href="https://storyset.com/media"
 			>Media illustrations by Storyset</a
 		>
 	</div>
-	<section class="flex w-full flex-col items-center justify-center gap-4 md:h-full">
-		<Card.Root class="h-full w-full">
-			<Card.Header>
-				<Button variant="outline" onclick={() => (login = !login)}>
-					{#if login}
-						Registrar-se
-					{:else}
-						Entrar
-					{/if}
-				</Button>
-			</Card.Header>
-			<Card.Content class="flex flex-col gap-4 md:h-full">
-				{#if login}
-					<div class="flex flex-col gap-4 md:h-[80%]">
-						<LoginForm form={formLogin} />
-					</div>
-				{:else}
-					<div class="flex flex-col gap-4 md:h-full">
-						<RegisterForm form={formRegister} />
-					</div>
-				{/if}
-			</Card.Content>
-		</Card.Root>
+	<section
+		class=" flex h-full w-full flex-col items-center justify-center gap-4 rounded-t-lg border p-6 md:border-none"
+	>
+		<div class="h-full lg:p-8">
+			<div class="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
+				<div>
+					<Tabs.Root value="signIn" class="w-full">
+						<Tabs.List class="w-full">
+							<Tabs.Trigger class="w-full" value="signIn">Entrar</Tabs.Trigger>
+							<Tabs.Trigger class="w-full" value="signUp">Registrar</Tabs.Trigger>
+						</Tabs.List>
+						<Tabs.Content value="signIn">
+							<LoginForm data={loginForm} />
+						</Tabs.Content>
+						<Tabs.Content value="signUp">
+							<RegisterForm data={registerForm} />
+						</Tabs.Content>
+					</Tabs.Root>
+				</div>
+			</div>
+		</div>
 	</section>
 </main>

@@ -1,5 +1,7 @@
 import { writable } from "svelte/store"
 
-export const userStore = writable<{ username: string }>({
-  username: "",
-})
+export const userStore = writable(null)
+
+export function logout() {
+  userStore.set(null);
+}

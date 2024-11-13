@@ -15,7 +15,6 @@ export async function getLatest() {
   return data.results;
 }
 
-
 // Busca filmes usando o nome como parâmetro
 export async function searchMovies(query: string) {
   if (!query) return []

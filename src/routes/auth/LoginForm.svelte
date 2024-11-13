@@ -1,83 +1,95 @@
 <script lang="ts">
-	import { Button } from '$lib/components/ui/button';
-	import * as Card from '$lib/components/ui/card';
 	import * as Form from '$lib/components/ui/form';
-	import { Input } from '$lib/components/ui/input';
-	import { Separator } from '$lib/components/ui/separator';
-	import { loginSchema } from '$lib/schema';
-	import { EyeIcon, EyeOff } from 'lucide-svelte';
-	import { toast } from 'svelte-sonner';
-	import { superForm } from 'sveltekit-superforms';
+
 	import { zodClient } from 'sveltekit-superforms/adapters';
+	import { EyeIcon, EyeOff, LoaderCircle } from 'lucide-svelte';
+	import { Input } from '$lib/components/ui/input';
+	import SuperDebug, { superForm, type Infer, type SuperValidated } from 'sveltekit-superforms';
+	import { toast } from 'svelte-sonner';
+	import { Separator } from '$lib/components/ui/separator';
+	import { loginSchema, type LoginSchema } from '$lib/schema';
+	import { browser } from '$app/environment';
 
-	const formRegister = $props();
+	let { data }: { data: SuperValidated<Infer<LoginSchema>> } = $props();
 
-	const form = superForm(formRegister, {
+	let loading = $state(false);
+
+	const form = superForm(data, {
 		validators: zodClient(loginSchema),
-		dataType: 'json',
 		onUpdated: ({ form: f }) => {
+			loading = true;
 			if (f.valid) {
+				loading = false;
 				toast.success('Login feito com sucesso!');
 			} else {
+				loading = false;
 				toast.error('Erro ao fazer login!');
 			}
+			loading = false;
 		}
 	});
 
-	let login: boolean = true;
-	let passwordVisible = $state(false);
 	const { form: formData, enhance } = form;
+
+	let passIsVisible = $state(false);
 </script>
 
-<Card.Root class="flex flex-col justify-center border-none">
-	<Card.Header class="flex flex-col items-center justify-center gap-4">
-		<Card.Title class="text-2xl font-bold">Entrar</Card.Title>
-		<Card.Description>Preencha os campos para entrar na sua conta</Card.Description>
-	</Card.Header>
-	<Card.Content class="flex flex-col border-none">
-		<form method="post" class="flex flex-col" action="?/login" use:enhance>
-			<Form.Field {form} name="username">
-				<Form.Control>
-					{#snippet children({ props })}
-						<Form.Label>Username</Form.Label>
-						<Input {...props} bind:value={$formData.username} />
-					{/snippet}
-				</Form.Control>
-				<Form.FieldErrors />
-			</Form.Field>
-			<Form.Field {form} name="password">
-				<Form.Control>
-					{#snippet children({ props })}
-						<Form.Label>Senha</Form.Label>
-						<div class="relative flex">
-							<Input
-								{...props}
-								bind:value={$formData.password}
-								class="w-full"
-								type={passwordVisible ? 'text' : 'password'}
-							/>
-							<Button
-								class="absolute right-0 top-0 h-full"
-								type="button"
-								onclick={() => (passwordVisible = !passwordVisible)}
-							>
-								{#if passwordVisible}
-									<EyeOff class="h-4 w-4" />
-								{:else}
-									<EyeIcon class="h-4 w-4" />
-								{/if}
-							</Button>
-						</div>
-					{/snippet}
-				</Form.Control>
-				<Form.FieldErrors />
-			</Form.Field>
-			<Form.Button class="mt-4 w-full items-center justify-center">Entrar</Form.Button>
-		</form>
-	</Card.Content>
-	<div class="mx-20 mx-4 flex items-center justify-center gap-4 text-xs text-muted-foreground">
-		<Separator />
-		OU
-		<Separator />
-	</div>
-</Card.Root>
+<form method="post" action="?/login" use:enhance>
+	<Form.Field {form} name="emailOrUsername">
+		<Form.Control>
+			{#snippet children({ props })}
+				<Form.Label>Username</Form.Label>
+				<Input {...props} bind:value={$formData.emailOrUsername} />
+			{/snippet}
+		</Form.Control>
+		<Form.FieldErrors />
+	</Form.Field>
+	<Form.Field {form} name="password">
+		<Form.Control>
+			{#snippet children({ props })}
+				<Form.Label>Senha</Form.Label>
+				<div class="relative">
+					<Input
+						{...props}
+						bind:value={$formData.password}
+						type={passIsVisible ? 'text' : 'password'}
+					/>
+					<button
+						type="button"
+						onclick={() => {
+							passIsVisible = !passIsVisible;
+						}}
+						class="absolute right-3 top-1/2 -translate-y-1/2"
+					>
+						{#if passIsVisible}
+							<EyeIcon class="h-4 w-4" />
+						{:else}
+							<EyeOff class="h-4 w-4" />
+						{/if}
+					</button>
+				</div>
+			{/snippet}
+		</Form.Control>
+		<Form.FieldErrors />
+	</Form.Field>
+	<Form.Button class={'w-full items-center'} disabled={loading}>
+		{#if loading}
+			<LoaderCircle class="mr-2 h-4 w-4 animate-spin" />
+		{/if}
+		Entrar
+	</Form.Button>
+</form>
+<div class="flex flex-col gap-4 pt-4">
+	<Separator />
+	<p class="px-8 text-center text-sm text-muted-foreground">
+		Ao clicar em entrar, você concorda com nossos
+		<a href="/terms" class="underline underline-offset-4 hover:text-primary">
+			Termos de Serviços
+		</a>
+		e
+		<a href="/privacy" class="underline underline-offset-4 hover:text-primary">
+			Politica de privacidade
+		</a>
+		.
+	</p>
+</div>
