@@ -1,38 +1,5 @@
-# sv
+# Cineteca
 
-Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
+Cineteca é um projeto desenvolvido como trabalho interdisciplinar para a faculdade, onde o tema sorteado para mim foi cinema. Tive a liberdade de escolher qualquer ferramenta para sua implementação, e optei por usar SvelteKit — uma framework incrível e que possuo mais habilidade. Para a estilização, utilizei Tailwind e ShadCN-Svelte, enquanto as consultas relacionadas ao usuário no banco de dados foram feitas com Drizzle. Para autenticação, escolhi a biblioteca Lucia.
 
-## Creating a project
-
-If you're seeing this, you've probably already done this step. Congrats!
-
-```bash
-# create a new project in the current directory
-npx sv create
-
-# create a new project in my-app
-npx sv create my-app
-```
-
-## Developing
-
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
-
-```bash
-npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
-```
-
-## Building
-
-To create a production version of your app:
-
-```bash
-npm run build
-```
-
-You can preview the production build with `npm run preview`.
-
-> To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
+A criação desse projeto me proporcionou diversos aprendizados, incluindo o uso de APIs de terceiros, como a API do TMDB para acessar informações dos filmes, o desenvolvimento de um app responsivo e o aprimoramento do meu conhecimento em SvelteKit.
