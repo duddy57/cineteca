@@ -40,7 +40,7 @@ export const actions: Actions = {
 
 		const existingUser = results.at(0);
 		if (!existingUser) {
-			return fail(400, { message: 'emailOrUsername ou email incorreto, talvez você queira criar uma conta?' });;
+			return fail(400, { message: 'Username ou email incorreto, talvez você queira criar uma conta?' });
 		}
 
 		const validPassword = await verify(existingUser.passwordHash, password, {
@@ -53,12 +53,16 @@ export const actions: Actions = {
 			return fail(400, { message: 'Email, senha ou usuário incorreto' });
 		}
 
-		const sessionToken = auth.generateSessionToken();
-		const session = await auth.createSession(sessionToken, existingUser.id);
-		auth.setSessionTokenCookie(event, sessionToken, session.expiresAt);
-		return {
-			form
-		};
+		if (existingUser) {
+			const sessionToken = auth.generateSessionToken();
+			const session = await auth.createSession(sessionToken, existingUser.id);
+			auth.setSessionTokenCookie(event, sessionToken, session.expiresAt);
+			return {
+				form
+			};
+		}
+
+
 	},
 
 	register: async (event) => {
@@ -104,9 +108,14 @@ export const actions: Actions = {
 				passwordHash: hashedPassword
 			}).returning();
 
-			const sessionToken = auth.generateSessionToken();
-			const session = await auth.createSession(sessionToken, user[0].id);
-			auth.setSessionTokenCookie(event, sessionToken, session.expiresAt);
+			if (user) {
+				const sessionToken = auth.generateSessionToken();
+				const session = await auth.createSession(sessionToken, user[0].id);
+				auth.setSessionTokenCookie(event, sessionToken, session.expiresAt);
+				return {
+					form
+				};
+			}
 			return {
 				form
 			};
